@@ -1,1 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>World Clock</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 6px 8px;
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 13px;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      white-space: nowrap;
+    }
+    .label {
+      margin-right: 8px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="row"><span class="label">UK (London)</span><span id="uk"></span></div>
+  <div class="row"><span class="label">PL (Wrocław)</span><span id="pl"></span></div>
+  <div class="row"><span class="label">LT (Klaipėda)</span><span id="lt"></span></div>
+  <div class="row"><span class="label">VN (HCMC)</span><span id="vn"></span></div>
+
+  <script>
+    function updateClocks() {
+      const now = new Date();
+      const opts = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+      document.getElementById('uk').textContent = now.toLocaleTimeString('en-GB', { timeZone: 'Europe/London', ...opts });
+      document.getElementById('pl').textContent = now.toLocaleTimeString('en-GB', { timeZone: 'Europe/Warsaw', ...opts });
+      document.getElementById('lt').textContent = now.toLocaleTimeString('en-GB', { timeZone: 'Europe/Vilnius', ...opts });
+      document.getElementById('vn').textContent = now.toLocaleTimeString('en-GB', { timeZone: 'Asia/Ho_Chi_Minh', ...opts });
+    }
+    setInterval(updateClocks, 1000);
+    updateClocks();
+  </script>
+</body>
+</html>
 
