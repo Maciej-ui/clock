@@ -2,43 +2,75 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>World Clock</title>
+  <title>World Clock Ticker</title>
   <style>
     body {
       margin: 0;
-      padding: 6px 8px;
+      padding: 4px 0;
       font-family: "Segoe UI", Arial, sans-serif;
       font-size: 13px;
+      background: transparent;
     }
-    .row {
-      display: flex;
-      justify-content: space-between;
+
+    .ticker {
+      overflow: hidden;
       white-space: nowrap;
+      box-sizing: border-box;
     }
-    .label {
-      margin-right: 8px;
-      font-weight: 600;
+
+    .ticker-track {
+      display: inline-block;
+      padding-left: 100%;
+      /* speed: higher = faster scroll */
+      animation: ticker-scroll 25s linear infinite;
+    }
+
+    .item {
+      display: inline-block;
+      margin-right: 32px;
+      font-weight: 500;
+    }
+
+    @keyframes ticker-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
     }
   </style>
 </head>
 <body>
-  <div class="row"><span class="label">UK (London)</span><span id="uk"></span></div>
-  <div class="row"><span class="label">PL (Wrocław)</span><span id="pl"></span></div>
-  <div class="row"><span class="label">LT (Klaipėda)</span><span id="lt"></span></div>
-  <div class="row"><span class="label">VN (HCMC)</span><span id="vn"></span></div>
+  <div class="ticker">
+    <div class="ticker-track" id="ticker"></div>
+  </div>
 
   <script>
-    function updateClocks() {
+    function getTimes() {
       const now = new Date();
       const opts = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
-      document.getElementById('uk').textContent = now.toLocaleTimeString('en-GB', { timeZone: 'Europe/London', ...opts });
-      document.getElementById('pl').textContent = now.toLocaleTimeString('en-GB', { timeZone: 'Europe/Warsaw', ...opts });
-      document.getElementById('lt').textContent = now.toLocaleTimeString('en-GB', { timeZone: 'Europe/Vilnius', ...opts });
-      document.getElementById('vn').textContent = now.toLocaleTimeString('en-GB', { timeZone: 'Asia/Ho_Chi_Minh', ...opts });
+
+      const uk  = now.toLocaleTimeString('en-GB', { timeZone: 'Europe/London', ...opts });
+      // CET shown using Warsaw time zone (your location)
+      const cet = now.toLocaleTimeString('en-GB', { timeZone: 'Europe/Warsaw', ...opts });
+      const lt  = now.toLocaleTimeString('en-GB', { timeZone: 'Europe/Vilnius', ...opts });
+      const vn  = now.toLocaleTimeString('en-GB', { timeZone: 'Asia/Ho_Chi_Minh', ...opts });
+
+      return { uk, cet, lt, vn };
     }
-    setInterval(updateClocks, 1000);
-    updateClocks();
+
+    function updateTicker() {
+      const { uk, cet, lt, vn } = getTimes();
+      const ticker = document.getElementById('ticker');
+
+      // One line, countries/abbreviations only
+      ticker.innerHTML =
+        `<span class="item">UK ${uk}</span>` +
+        `<span class="item">CET ${cet}</span>` +
+        `<span class="item">LT ${lt}</span>` +
+        `<span class="item">VN ${vn}</span>`;
+    }
+
+    // Update every second so times stay accurate
+    setInterval(updateTicker, 1000);
+    updateTicker();
   </script>
 </body>
 </html>
-
